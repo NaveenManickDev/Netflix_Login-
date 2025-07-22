@@ -1,10 +1,16 @@
-function App() {
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Success from './pages/Success';
 
+function App() {
   return (
-    <>
-     <h1 className="text-red-500 flex justify-center text-3xl">Welcome Netflix</h1>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/success" element={<Success />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
