@@ -25,7 +25,7 @@ function Signup() {
 
       if (res.ok) {
         setMessage(data.message);
-        setTimeout(() => navigate("/"), 1500); // redirect to login after success
+        setTimeout(() => navigate("/"), 1500); 
       } else {
         setError(data.message);
       }
