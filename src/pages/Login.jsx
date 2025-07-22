@@ -3,27 +3,60 @@ import { useNavigate } from 'react-router-dom';
 import bgImage from '../assets/Ntflix.jpg';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState({
+    email: '',
+    password: '',
+  });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = async  (e) => {
+  //   e.preventDefault();
 
-    if (email === 'test@example.com' && password === '123456') {
-      navigate('/success');
-    } else {
-      setError('Invalid email or password');
-    }
-  };
+  //   console.log(user);
+
+  //   fetch("http://localhost:8000/signup", {
+  //     method:"POST",
+  //     body: JSON.stringify(user)
+  //   })
+    
+
+  //   if (user.email === 'test@example.com' && user.password === '123456') {
+  //     navigate('/success');
+  //   } else {
+  //     setError('Invalid email or password');
+  //   }
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  fetch("http://localhost:8000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+    .then(async (response) => {
+      const data = await response.json();
+
+      if (response.ok) {
+        navigate("/success");
+      } else {
+        setError(data.message);
+      }
+    })
+    .catch((err) => {
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
+    });
+};
 
   return (
     <div
       className="relative flex items-center justify-center h-screen text-white bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-      }}
+      style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div className="absolute top-6 left-8 text-4xl font-bold text-red-600">
         Netflix
@@ -36,15 +69,19 @@ function Login() {
             className="w-full p-3 mb-4 bg-gray-800 rounded"
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={user.email}
+            onChange={(e) =>
+              setUser({ ...user, email: e.target.value })
+            }
           />
           <input
             className="w-full p-3 mb-4 bg-gray-800 rounded"
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={user.password}
+            onChange={(e) =>
+              setUser({ ...user, password: e.target.value })
+            }
           />
           {error && <p className="text-red-500 mb-2">{error}</p>}
 
@@ -70,7 +107,7 @@ function Login() {
 
           <p className="mt-6 text-gray-400 text-sm">
             New to Netflix?{' '}
-            <a href="#" className="text-white hover:underline">Sign up now.</a>
+            <a href="/signup" className="text-white hover:underline">Sign up now.</a>
           </p>
 
           <p className="mt-4 text-gray-500 text-xs leading-5">
